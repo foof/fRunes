@@ -3,6 +3,6 @@
 ## Notes: Very low-weight rune tracker for Tukui.
 ## Author: Foof
 ## Version: 1.1
-## RequiredDeps: Tukui, ecUnitframes
+## RequiredDeps: Tukui
 
 fRunes.lua
