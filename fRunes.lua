@@ -1,26 +1,6 @@
 if (select(2, UnitClass("player")) ~= "DEATHKNIGHT") then return end
 
--- Settings
-local fRunesSettings = {
-	texture = TukuiCF.media.normTex,
-	
-	barLength = 50,
-	barThickness = 8,
-	
-	anchor = UIParent,
-	x = 0,
-	y = 200,
-	
-	growthDirection = "VERTICAL" -- HORIZONTAL or VERTICAL
-}
-
--- Colors
-local runecolors = {
-	{.69,.31,.31}, -- blood
-	{.33,.59,.33}, -- unholy
-	{.31,.45,.63}, -- frost
-	{.84,.75,.65}, -- death
-}
+local colors = fRunesSettings.colors
 
 local runes = {}
 
@@ -35,17 +15,13 @@ end
 
 -- Styling
 TukuiDB.SetTemplate(fRunes)
-if (TukuiDB.StyleShadow) then
-	TukuiDB.StyleShadow(fRunes)
-elseif (TukuiDB.CreateShadow) then
-	TukuiDB.CreateShadow(fRunes)
-end
+TukuiDB.CreateShadow(fRunes)
 
 -- Create the runes
 for i = 1, 6 do
 	local rune = CreateFrame("StatusBar", "fRunesRune"..i, fRunes)
 	rune:SetStatusBarTexture(fRunesSettings.texture)
-	rune:SetStatusBarColor(unpack(runecolors[math.ceil(i/2)]))
+	rune:SetStatusBarColor(unpack(colors[math.ceil(i/2)]))
 	rune:SetMinMaxValues(0, 10)
 	
 	if (fRunesSettings.growthDirection == "VERTICAL") then
@@ -76,11 +52,44 @@ for i = 1, 6 do
 	tinsert(runes, rune)
 end
 
+-- Create the RP Bar
+if (fRunesSettings.displayRpBar) then
+	local rpbarbg = CreateFrame("Frame", "fRunesRunicPower", fRunes)
+	TukuiDB.SetTemplate(rpbarbg)
+	TukuiDB.CreateShadow(rpbarbg)
+	rpbarbg:SetPoint("TOPLEFT", fRunes, "BOTTOMLEFT", 0, -3)
+	rpbarbg:SetPoint("TOPRIGHT", fRunes, "BOTTOMRIGHT", 0, -3)
+	rpbarbg:SetHeight(fRunesSettings.rpBarThickness or 10)
+	
+	local rpbar = CreateFrame("StatusBar", nil, rpbarbg)
+	rpbar:SetStatusBarTexture(fRunesSettings.texture)
+	rpbar:SetStatusBarColor(unpack(colors[5]))
+	rpbar:SetMinMaxValues(0, 100)
+	
+	rpbar:SetPoint("TOPLEFT", rpbarbg, "TOPLEFT", 2, -2)
+	rpbar:SetPoint("BOTTOMRIGHT", rpbarbg, "BOTTOMRIGHT", -2, 2)
+	
+	rpbar:SetScript("OnEvent", function(self, event)
+		if (event ~= "UNIT_POWER") then
+			local maxrp = UnitPowerMax("player")
+			self:SetMinMaxValues(0, maxrp)
+		end
+		
+		local power = UnitPower("player")
+		self:SetValue(power)
+	end)
+	
+	rpbar:RegisterEvent("PLAYER_ENTERING_WORLD")
+	rpbar:RegisterEvent("PLAYER_TALENT_UPDATE")
+	rpbar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+	rpbar:RegisterEvent("UNIT_POWER")
+end  
+
 -- Function to update runes
 local function UpdateRune(id, start, duration, finished)
 	local rune = runes[id]
 	
-	rune:SetStatusBarColor(unpack(runecolors[GetRuneType(id)]))
+	rune:SetStatusBarColor(unpack(colors[GetRuneType(id)]))
 	rune:SetMinMaxValues(0, duration)
 	
 	if (finished) then
