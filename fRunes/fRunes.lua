@@ -101,7 +101,7 @@ end
 
 local OnUpdate = CreateFrame("Frame")
 OnUpdate.TimeSinceLastUpdate = 0
-OnUpdate:SetScript("OnUpdate", function(self, elapsed)
+local updateFunc = function(self, elapsed)
 	self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed; 	
 
 	if (self.TimeSinceLastUpdate > 0.07) then
@@ -110,7 +110,26 @@ OnUpdate:SetScript("OnUpdate", function(self, elapsed)
 		end
 		self.TimeSinceLastUpdate = 0
 	end
-end)
+end
+OnUpdate:SetScript("OnUpdate", updateFunc)
 
+fRunes:RegisterEvent("PLAYER_REGEN_DISABLED")
+fRunes:RegisterEvent("PLAYER_REGEN_ENABLED")
+fRunes:RegisterEvent("PLAYER_ENTERING_WORLD")
+fRunes:SetScript("OnEvent", function(self, event)
+	if (not fRunesSettings.hideOOC) then
+		fRunes:UnregisterAllEvents()
+	elseif (event == "PLAYER_REGEN_DISABLED") then
+		UIFrameFadeIn(self, (0.3 * (1-self:GetAlpha())), self:GetAlpha(), 1)
+		OnUpdate:SetScript("OnUpdate", updateFunc)
+	elseif (event == "PLAYER_REGEN_ENABLED") then
+		UIFrameFadeOut(self, (0.3 * (0+self:GetAlpha())), self:GetAlpha(), 0)
+		OnUpdate:SetScript("OnUpdate", nil)
+	elseif (event == "PLAYER_ENTERING_WORLD") then
+		if (not InCombatLockdown()) then
+			fRunes:SetAlpha(0)
+		end
+	end
+end)
 -- hide blizzard runeframe
 RuneFrame:Hide()

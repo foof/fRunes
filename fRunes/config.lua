@@ -6,6 +6,7 @@ fRunesSettings = {
 	barThickness = 14,
 	rpBarThickness = 10,
 	anchor = UIParent,
+	hideOOC = true,
 	x = 0,
 	y = 170,
 	growthDirection = "VERTICAL", -- HORIZONTAL or VERTICAL
