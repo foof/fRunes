@@ -3,6 +3,7 @@ if (select(2, UnitClass("player")) ~= "DEATHKNIGHT") then return end
 local colors = fRunesSettings.colors
 
 local runes = {}
+local runemap = fRunesSettings.runemap
 
 -- Create the frame
 fRunes = CreateFrame("Frame", "fRunes", oUF_Tukz_player)
@@ -21,7 +22,7 @@ TukuiDB.CreateShadow(fRunes)
 for i = 1, 6 do
 	local rune = CreateFrame("StatusBar", "fRunesRune"..i, fRunes)
 	rune:SetStatusBarTexture(fRunesSettings.texture)
-	rune:SetStatusBarColor(unpack(colors[math.ceil(i/2)]))
+	rune:SetStatusBarColor(unpack(colors[math.ceil(runemap[i]/2)]))
 	rune:SetMinMaxValues(0, 10)
 	
 	if (fRunesSettings.growthDirection == "VERTICAL") then
@@ -69,27 +70,39 @@ if (fRunesSettings.displayRpBar) then
 	rpbar:SetPoint("TOPLEFT", rpbarbg, "TOPLEFT", 2, -2)
 	rpbar:SetPoint("BOTTOMRIGHT", rpbarbg, "BOTTOMRIGHT", -2, 2)
 	
-	rpbar:SetScript("OnEvent", function(self, event)
-		if (event ~= "UNIT_POWER") then
-			local maxrp = UnitPowerMax("player")
-			self:SetMinMaxValues(0, maxrp)
+	if (fRunesSettings.displayRpBarText) then
+		local fontHeight = rpbar:GetHeight()-4
+		if fontHeight < 11 then
+			fontHeight = 11
 		end
 		
-		local power = UnitPower("player")
-		self:SetValue(power)
-	end)
+		rpbar.text = rpbar:CreateFontString(nil, "ARTWORK")
+		rpbar.text:SetFont(TukuiCF["media"].font, fontHeight, "THINOUTLINE")
+		rpbar.text:SetPoint("CENTER", 1, 0)
+		rpbar.text:SetTextColor(unpack(colors[5]))
+	end
 	
-	rpbar:RegisterEvent("PLAYER_ENTERING_WORLD")
-	rpbar:RegisterEvent("PLAYER_TALENT_UPDATE")
-	rpbar:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-	rpbar:RegisterEvent("UNIT_POWER")
+	rpbar.TimeSinceLastUpdate = 0
+	rpbar:SetScript("OnUpdate", function(self, elapsed)
+		self.TimeSinceLastUpdate = self.TimeSinceLastUpdate + elapsed; 
+		
+		if (self.TimeSinceLastUpdate > 0.07) then
+			self:SetMinMaxValues(0, UnitPowerMax("player"))
+			local power = UnitPower("player")
+			self:SetValue(power)
+			if (self.text) then
+				self.text:SetText(power)
+			end
+			self.TimeSinceLastUpdate = 0
+		end
+	end)
 end  
 
 -- Function to update runes
 local function UpdateRune(id, start, duration, finished)
 	local rune = runes[id]
 	
-	rune:SetStatusBarColor(unpack(colors[GetRuneType(id)]))
+	rune:SetStatusBarColor(unpack(colors[GetRuneType(runemap[id])]))
 	rune:SetMinMaxValues(0, duration)
 	
 	if (finished) then
@@ -106,7 +119,7 @@ local updateFunc = function(self, elapsed)
 
 	if (self.TimeSinceLastUpdate > 0.07) then
 		for i = 1, 6 do
-			UpdateRune(i, GetRuneCooldown(i))
+			UpdateRune(i, GetRuneCooldown(runemap[i]))
 		end
 		self.TimeSinceLastUpdate = 0
 	end
