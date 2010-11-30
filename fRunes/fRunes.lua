@@ -6,7 +6,7 @@ local runes = {}
 local runemap = fRunesSettings.runemap
 
 -- Create the frame
-fRunes = CreateFrame("Frame", "fRunes", oUF_Tukz_player)
+fRunes = CreateFrame("Frame", "fRunes", UIParent)
 fRunes:SetPoint("BOTTOM", fRunesSettings.anchor, "BOTTOM", fRunesSettings.x, fRunesSettings.y)
 if (fRunesSettings.growthDirection == "VERTICAL") then
 	fRunes:SetSize(fRunesSettings.barThickness * 6 + 9, fRunesSettings.barLength)
