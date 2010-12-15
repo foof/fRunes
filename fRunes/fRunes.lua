@@ -139,6 +139,7 @@ fRunes:SetScript("OnEvent", function(self, event)
 		UIFrameFadeOut(self, (0.3 * (0+self:GetAlpha())), self:GetAlpha(), 0)
 		OnUpdate:SetScript("OnUpdate", nil)
 	elseif (event == "PLAYER_ENTERING_WORLD") then
+		RuneFrame:ClearAllPoints()
 		if (not InCombatLockdown()) then
 			fRunes:SetAlpha(0)
 		end
@@ -146,3 +147,6 @@ fRunes:SetScript("OnEvent", function(self, event)
 end)
 -- hide blizzard runeframe
 RuneFrame:Hide()
+RuneFrame:SetScript("OnShow", function(self)
+	self:Hide()
+end)
