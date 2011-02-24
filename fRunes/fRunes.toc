@@ -2,7 +2,7 @@
 ## Title: fRunes
 ## Notes: Very low-weight rune tracker for Tukui.
 ## Author: Foof
-## Version: 1.3
+## Version: 1.4
 ## RequiredDeps: Tukui
 
 config.lua
