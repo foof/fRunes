@@ -15,8 +15,8 @@ else
 end
 
 -- Styling
-TukuiDB.SetTemplate(fRunes)
-TukuiDB.CreateShadow(fRunes)
+fRunes:SetTemplate("Default")
+fRunes:CreateShadow("Default")
 
 -- Create the runes
 for i = 1, 6 do
@@ -56,8 +56,8 @@ end
 -- Create the RP Bar
 if (fRunesSettings.displayRpBar) then
 	local rpbarbg = CreateFrame("Frame", "fRunesRunicPower", fRunes)
-	TukuiDB.SetTemplate(rpbarbg)
-	TukuiDB.CreateShadow(rpbarbg)
+	rpbarbg:SetTemplate("Default")
+	rpbarbg:CreateShadow("Default")
 	rpbarbg:SetPoint("TOPLEFT", fRunes, "BOTTOMLEFT", 0, -3)
 	rpbarbg:SetPoint("TOPRIGHT", fRunes, "BOTTOMRIGHT", 0, -3)
 	rpbarbg:SetHeight(fRunesSettings.rpBarThickness or 10)
@@ -145,6 +145,7 @@ fRunes:SetScript("OnEvent", function(self, event)
 		end
 	end
 end)
+
 -- hide blizzard runeframe
 RuneFrame:Hide()
 RuneFrame:SetScript("OnShow", function(self)

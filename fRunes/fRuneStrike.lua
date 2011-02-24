@@ -3,7 +3,7 @@ if (select(2, UnitClass("player")) ~= "DEATHKNIGHT" or fRunesSettings.runestrike
 local name, _, icon = GetSpellInfo(56815)
 
 local frame = CreateFrame("Frame", _, UIParent)
-TukuiDB.CreatePanel(frame, TukuiDB.Scale(50), TukuiDB.Scale(50), "BOTTOM", _G["fRunes"], "TOP", 0, 10)
+frame:CreatePanel("Default", TukuiDB.Scale(50), TukuiDB.Scale(50), "BOTTOM", _G["fRunes"], "TOP", 0, 10)
 frame:SetAlpha(1)
 
 frame.icon = frame:CreateTexture(nil, "OVERLAY")
