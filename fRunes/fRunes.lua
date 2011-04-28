@@ -1,5 +1,7 @@
 if (select(2, UnitClass("player")) ~= "DEATHKNIGHT") then return end
 
+local T, C, L = unpack(Tukui)
+
 local colors = fRunesSettings.colors
 
 local runes = {}
@@ -77,7 +79,7 @@ if (fRunesSettings.displayRpBar) then
 		end
 		
 		rpbar.text = rpbar:CreateFontString(nil, "ARTWORK")
-		rpbar.text:SetFont(TukuiCF["media"].font, fontHeight, "THINOUTLINE")
+		rpbar.text:SetFont(C["media"].font, fontHeight, "THINOUTLINE")
 		rpbar.text:SetPoint("CENTER", 1, 0)
 		rpbar.text:SetTextColor(unpack(colors[5]))
 	end
