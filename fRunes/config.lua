@@ -1,7 +1,9 @@
 if (select(2, UnitClass("player")) ~= "DEATHKNIGHT") then return end
 
+local T, C, L = unpack(Tukui)
+
 fRunesSettings = {
-	texture = TukuiCF.media.normTex,
+	texture = C.media.normTex,
 	barLength = 40,
 	barThickness = 14,
 	rpBarThickness = 10,
@@ -14,7 +16,7 @@ fRunesSettings = {
 	displayRpBar = true, -- runic power bar below the runes
 	displayRpBarText = true, -- runic power text on the runic power bar
 	
-	runestrike = true, -- shows a rune strike icon whenever it's usable
+	runestrike = false, -- shows a rune strike icon whenever it's usable
 	
 	colors = {
 		{.69,.31,.31}, -- blood
